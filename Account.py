@@ -15,7 +15,7 @@ class Account:
 
     def deposit(self, money):
         self.__balance += money
-        self.__make_transaction(tname="Deposit", amount=money)
+        self.make_transaction(tname="Deposit", amount=money)
 
     def withdrawal(self, money):
         if money > self.__balance:
@@ -24,6 +24,16 @@ class Account:
         self.__balance -= money
         self.__make_transaction(tname="Withdrawal", amount=money)
         return True
+
+    def transfer_money(self, account_id: int, amount: int):
+        self.__balance -= amount
+        self.make_transaction(
+            f"Transfered to {account_id}", amount=amount)
+
+    def recieve_money(self, account_id: int, amount: int):
+        self.__balance += amount
+        self.make_transaction(
+            f"Recieved from {account_id}", amount=amount)
 
     def set_account_number(self, id):
         self.__account_number = id
@@ -34,23 +44,23 @@ class Account:
     def get_balance(self):
         return self.__balance
 
-    def __make_transaction(self, tname, amount):
+    def make_transaction(self, tname, amount):
         self.__transactions.append(f"{tname} : {amount}")
 
     def get_transactions_history(self):
         return self.__transactions
 
     def take_loan(self, amount):
-        if self.__loan_taken < 2:
+        if self.allowed_to_take_loan():
             self.__loan += amount
             self.__loan_taken += 1
             self.__balance += amount
             return True
         return False
 
-    def get_loan_taken(self):
-        return self.__loan_taken
+    def allowed_to_take_loan(self):
+        return self.__loan_taken < 2
 
     def __repr__(self) -> str:
         cls = self.__class__.__name__
-        return f'{cls}:: Account Number:{self.__account_number}, name:{self.__name}, email:{self.__email}, balance:{self.__balance}'
+        return f'{cls}::\n Account Number:{self.__account_number},\nname:{self.__name}, \nemail:{self.__email}, \nbalance:{self.__balance}'

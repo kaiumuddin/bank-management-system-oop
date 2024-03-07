@@ -1,10 +1,12 @@
 from Account import *
 from Bank import *
 from AccountCreator import *
+from LoanController import *
+from Transfer import *
 
 
 class User_UI:
-    def __init__(self, bank) -> None:
+    def __init__(self, bank: Bank) -> None:
         self.bank = bank
         self.account = None
 
@@ -17,7 +19,9 @@ class User_UI:
             if (self.account != None):
                 print(self.account)
 
-            print("0. Login\n1. Create an account\n2. Deposit\n3. Withdrawal\n4. Check Balance\n5. Check Transaction History\n6. Take a loan\n7. Transfer Money\n8. Exit")
+            print("0. Login\n1. Create an account")
+            if (self.account != None):
+                print("2. Deposit\n3. Withdrawal\n4. Check Balance\n5. Check Transaction History\n6. Take a loan\n7. Transfer Money\n8. Exit")
             choice = input("Enter your choice: ")
 
             if choice == '0':
@@ -42,7 +46,7 @@ class User_UI:
                 account = self.bank.create_account(account)
                 self.account = account
 
-            elif choice == '2':
+            elif self.account and choice == '2':
                 print("---------------------------------")
                 print("Deposit")
                 print("---------------------------------")
@@ -51,7 +55,7 @@ class User_UI:
                 self.account.deposit(amount)
                 self.bank.increase_total_balance(amount)
 
-            elif choice == '3':
+            elif self.account and choice == '3':
                 print("---------------------------------")
                 print("Withdrawal")
                 print("---------------------------------")
@@ -62,14 +66,14 @@ class User_UI:
                 if success == False:
                     print("Withdrawal amount exceeded")
 
-            elif choice == '4':
+            elif self.account and choice == '4':
                 print("---------------------------------")
                 print("Check Balance")
                 print("---------------------------------")
 
                 print("Balance = ", self.account.get_balance())
 
-            elif choice == '5':
+            elif self.account and choice == '5':
                 print("---------------------------------")
                 print("Check Transaction history")
                 print("---------------------------------")
@@ -77,16 +81,29 @@ class User_UI:
                 for t in self.account.get_transactions_history():
                     print(t)
 
-            elif choice == '6':
+            elif self.account and choice == '6':
                 print("---------------------------------")
                 print("Take Loan")
                 print("---------------------------------")
-                pass
+                amount = int(input("Enter Loan Amount: "))
 
-            elif choice == '7':
+                if self.bank.get_loan_feature() == False:
+                    print("Loan Feature is off")
+                    return
+
+                result = LoanController().createLoan(account=self.account,
+                                                     bank=self.bank, loan_amount=amount)
+                print(result)
+
+            elif self.account and choice == '7':
                 print("---------------------------------")
                 print("Transfer Money")
                 print("---------------------------------")
+                to_account_number = int(input("Enter account number: "))
+                amount = int(input("Enter amount to transfer: "))
+                result = Transfer.make_transfer(
+                    bank=self.bank, from_account=self.account, to_account_number=to_account_number, amount=amount)
+                print(result)
                 pass
 
             elif choice == '8':
@@ -99,4 +116,3 @@ class User_UI:
                 print("---------------------------------")
                 print("Invalid choice. Please try again.")
                 print("---------------------------------")
-
