@@ -1,7 +1,6 @@
 from User_UI import *
 from Admin_UI import *
 from Bank import *
-from Admin import *
 
 
 def main():

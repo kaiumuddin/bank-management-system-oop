@@ -56,14 +56,3 @@ class Bank:
 
     def decrease_total_loan(self, amount):
         self.__total_loan -= amount
-
-
-# admin = Admin(name="admin", email="admin@gmail.com", password="admin")
-# user = User(name="Kaium Uddin", email="kaium@gmail.com",
-#             address="Dhaka", account_type="savings")
-# bank.create_account(user)
-# bank.create_admin(admin)
-# # bank.delete_account(admin, user);
-
-# print(bank.get_account(user.account_number))
-# print("Balance = ", bank.get_total_balance(admin=admin))
